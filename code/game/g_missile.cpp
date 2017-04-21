@@ -160,8 +160,14 @@ void G_ReflectMissile( gentity_t *ent, gentity_t *missile, vec3_t forward )
 	//save the original speed
 	speed = VectorNormalize( missile->s.pos.trDelta );
 
-	if ( ent && owner && owner->client && !owner->client->ps.saberInFlight &&
-		(owner->client->ps.forcePowerLevel[FP_SABER_DEFENSE] > FORCE_LEVEL_2 || (owner->client->ps.forcePowerLevel[FP_SABER_DEFENSE]>FORCE_LEVEL_1&&!Q_irand( 0, 3 )) ) )
+	if ( ent && owner && owner->client && !owner->client->ps.saberInFlight && (
+		g_spskill->integer <= 3 && 
+		(owner->client->ps.forcePowerLevel[FP_SABER_DEFENSE] > FORCE_LEVEL_2 || 
+		(owner->client->ps.forcePowerLevel[FP_SABER_DEFENSE]>FORCE_LEVEL_1&&!Q_irand( 0, 3 )) ) ||
+			g_spskill->integer > 3 && 
+			(owner->client->ps.forcePowerLevel[FP_SABER_DEFENSE] == FORCE_LEVEL_1 && !Q_irand(0, 19) ||
+			owner->client->ps.forcePowerLevel[FP_SABER_DEFENSE] == FORCE_LEVEL_2 && !Q_irand(0, 9) ||
+			owner->client->ps.forcePowerLevel[FP_SABER_DEFENSE] >= FORCE_LEVEL_3 && !Q_irand(0, 4)) ))
 	{//if high enough defense skill and saber in-hand (100% at level 3, 25% at level 2, 0% at level 1), reflections are perfectly deflected toward an enemy
 		gentity_t *enemy;
 		if ( owner->enemy && Q_irand( 0, 3 ) )
