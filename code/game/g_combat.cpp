@@ -5745,7 +5745,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, const
 		)
 	   )
 	{
-		damage *= 7;
+		if (g_spskill->integer > 3)
+			damage *= 4;
+		else
+			damage *= 7;
 	}
 
 	if ( client && client->NPC_class == CLASS_HAZARD_TROOPER )
@@ -5816,7 +5819,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, const
 						client->NPC_class == CLASS_ATST )
 			{
 				// DEMP2 does way more damage to these guys.
-				damage *= 5;
+				if (g_spskill->integer > 3)
+					damage *= 3;
+				else
+					damage *= 5;
 			}
 		}
 		else if ( targ->s.weapon == WP_TURRET )

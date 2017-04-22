@@ -28,7 +28,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define	MIN_MELEE_RANGE				320
 #define	MIN_MELEE_RANGE_SQR			( MIN_MELEE_RANGE * MIN_MELEE_RANGE )
 
-#define MIN_DISTANCE				128
+#define MIN_DISTANCE				384
 #define MIN_DISTANCE_SQR			( MIN_DISTANCE * MIN_DISTANCE )
 
 #define TURN_OFF					0x00000100
@@ -37,13 +37,13 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define RIGHT_ARM_HEALTH			40
 #define AMMO_POD_HEALTH				40
 
-#define	BOWCASTER_VELOCITY			1300
-#define	BOWCASTER_NPC_DAMAGE_EASY	12
-#define	BOWCASTER_NPC_DAMAGE_NORMAL	24
-#define	BOWCASTER_NPC_DAMAGE_HARD	36
-#define BOWCASTER_SIZE				2
-#define BOWCASTER_SPLASH_DAMAGE		0
-#define BOWCASTER_SPLASH_RADIUS		0
+//#define	BOWCASTER_VELOCITY			1300
+//#define	BOWCASTER_NPC_DAMAGE_EASY	12
+//#define	BOWCASTER_NPC_DAMAGE_NORMAL	24
+//#define	BOWCASTER_NPC_DAMAGE_HARD	36
+//#define BOWCASTER_SIZE				2
+//#define BOWCASTER_SPLASH_DAMAGE		0
+//#define BOWCASTER_SPLASH_RADIUS		0
 
 //Local state enums
 enum
@@ -93,8 +93,7 @@ void NPC_Mark1_Precache(void)
 	RegisterItem( FindItemForAmmo( AMMO_BLASTER ));
 	if (g_spskill->integer > 3)
 		RegisterItem(FindItemForWeapon(WP_ROCKET_LAUNCHER));
-	else
-		RegisterItem(FindItemForWeapon(WP_BOWCASTER));
+	RegisterItem(FindItemForWeapon(WP_BOWCASTER));
 	RegisterItem( FindItemForWeapon( WP_BRYAR_PISTOL ));
 }
 
@@ -142,73 +141,43 @@ Mark1Dead_FireRocket
 - Shoot the left weapon, the multi-blaster
 -------------------------
 */
-void Mark1Dead_FireRocket (void)
+void Mark1Dead_FireRocket(void)
 {
 	mdxaBone_t	boltMatrix;
-	vec3_t	muzzle1,muzzle_dir;
+	vec3_t	muzzle1, muzzle_dir;
 
-	int	damage	= 50;
+	int	damage = 50;
 
-	gi.G2API_GetBoltMatrix( NPC->ghoul2, NPC->playerModel,
-				NPC->genericBolt5,
-				&boltMatrix, NPC->currentAngles, NPC->currentOrigin, (cg.time?cg.time:level.time),
-				NULL, NPC->s.modelScale );
+	gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->playerModel,
+		NPC->genericBolt5,
+		&boltMatrix, NPC->currentAngles, NPC->currentOrigin, (cg.time ? cg.time : level.time),
+		NULL, NPC->s.modelScale);
 
-	gi.G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, muzzle1 );
-	gi.G2API_GiveMeVectorFromMatrix( boltMatrix, NEGATIVE_Y, muzzle_dir );
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzle1);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, muzzle_dir);
 
-	if (g_spskill->integer > 3)
-	{
-		damage = ROCKET_NPC_DAMAGE_HARD;
+	G_PlayEffect("bryar/muzzle_flash", muzzle1, muzzle_dir);
 
-		G_PlayEffect("rocket/muzzle_flash", muzzle1);
+	G_Sound(NPC, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
 
-		G_Sound(NPC, G_SoundIndex("sound/weapons/rocket/fire"));
+	gentity_t *missile = CreateMissile(muzzle1, muzzle_dir, BOWCASTER_VELOCITY, 10000, NPC);
 
-		gentity_t *missile = CreateMissile(muzzle1, muzzle_dir, ROCKET_VELOCITY, 10000, NPC);
+	missile->classname = "bowcaster_proj";
+	missile->s.weapon = WP_BOWCASTER;
 
-		missile->classname = "rocket_proj";
-		missile->s.weapon = WP_ROCKET_LAUNCHER;
-		missile->mass = 10;
+	VectorSet(missile->maxs, BOWCASTER_SIZE, BOWCASTER_SIZE, BOWCASTER_SIZE);
+	VectorScale(missile->maxs, -1, missile->mins);
 
-		VectorSet(missile->maxs, ROCKET_SIZE, ROCKET_SIZE, ROCKET_SIZE);
-		VectorScale(missile->maxs, -1, missile->mins);
+	missile->damage = damage;
+	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
+	missile->methodOfDeath = MOD_ENERGY;
+	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
+	missile->splashDamage = BOWCASTER_SPLASH_DAMAGE;
+	missile->splashRadius = BOWCASTER_SPLASH_RADIUS;
 
-		missile->damage = damage;
-		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-		missile->methodOfDeath = MOD_ROCKET;
-		missile->splashMethodOfDeath = MOD_ROCKET;
-		missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
-		missile->splashDamage = ROCKET_SPLASH_DAMAGE;
-		missile->splashRadius = ROCKET_SPLASH_RADIUS;
+	// we don't want it to bounce
+	missile->bounceCount = 0;
 
-		// we don't want it to bounce
-		missile->bounceCount = 0;
-	}
-	else
-	{
-		//	G_PlayEffect( "blaster/muzzle_flash", muzzle1 );
-
-		G_Sound(NPC, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
-
-		gentity_t *missile = CreateMissile(muzzle1, muzzle_dir, BOWCASTER_VELOCITY, 10000, NPC);
-
-		missile->classname = "bowcaster_proj";
-		missile->s.weapon = WP_BOWCASTER;
-
-		VectorSet(missile->maxs, BOWCASTER_SIZE, BOWCASTER_SIZE, BOWCASTER_SIZE);
-		VectorScale(missile->maxs, -1, missile->mins);
-
-		missile->damage = damage;
-		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-		missile->methodOfDeath = MOD_ENERGY;
-		missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
-		missile->splashDamage = BOWCASTER_SPLASH_DAMAGE;
-		missile->splashRadius = BOWCASTER_SPLASH_RADIUS;
-
-		// we don't want it to bounce
-		missile->bounceCount = 0;
-	}
 }
 
 /*
@@ -387,7 +356,7 @@ void NPC_Mark1_Pain( gentity_t *self, gentity_t *inflictor, gentity_t *other, co
 	// Hit in the left arm?
 	else if ((hitLoc==HL_ARM_LT) && (self->locationDamage[HL_ARM_LT] > LEFT_ARM_HEALTH))
 	{
-		if (self->locationDamage[hitLoc] >= LEFT_ARM_HEALTH)	// Blow it up?
+		if (self->locationDamage[hitLoc] >= LEFT_ARM_HEALTH * (g_spskill->integer > 3 ? 4 : 1))	// Blow it up?
 		{
 			newBolt = gi.G2API_AddBolt( &self->ghoul2[self->playerModel], "*flash3" );
 			if ( newBolt != -1 )
@@ -401,7 +370,7 @@ void NPC_Mark1_Pain( gentity_t *self, gentity_t *inflictor, gentity_t *other, co
 	// Hit in the right arm?
 	else if ((hitLoc==HL_ARM_RT) && (self->locationDamage[HL_ARM_RT] > RIGHT_ARM_HEALTH))	// Blow it up?
 	{
-		if (self->locationDamage[hitLoc] >= RIGHT_ARM_HEALTH)
+		if (self->locationDamage[hitLoc] >= RIGHT_ARM_HEALTH * (g_spskill->integer > 3 ? 4 : 1))
 		{
 			newBolt = gi.G2API_AddBolt( &self->ghoul2[self->playerModel], "*flash4" );
 			if ( newBolt != -1 )
@@ -547,6 +516,8 @@ void Mark1_BlasterAttack(qboolean advance )
 	if ( TIMER_Done( NPC, "attackDelay" ) )	// Attack?
 	{
 		chance = Q_irand( 1, 5);
+		if (g_spskill->integer > 3)
+			chance += Q_irand(0, 1);
 
 		NPCInfo->burstCount++;
 
@@ -564,14 +535,17 @@ void Mark1_BlasterAttack(qboolean advance )
 		if (chance == 1)
 		{
 			NPCInfo->burstCount = 0;
-			TIMER_Set( NPC, "attackDelay", Q_irand( 1000, 3000) );
+			if (g_spskill->integer > 3)
+				TIMER_Set(NPC, "attackDelay", Q_irand(500, 1500));
+			else
+				TIMER_Set( NPC, "attackDelay", Q_irand( 1000, 3000) );
 			NPC->client->ps.torsoAnimTimer=0;						// Just in case the firing anim is running.
 		}
 		else
 		{
 			if (TIMER_Done( NPC, "attackDelay2" ))	// Can't be shooting every frame.
 			{
-				TIMER_Set( NPC, "attackDelay2", Q_irand( 50, 50) );
+				TIMER_Set(NPC, "attackDelay2", Q_irand(50, 50));
 				Mark1_FireBlaster();
  				NPC_SetAnim( NPC, SETANIM_BOTH, BOTH_ATTACK1, SETANIM_FLAG_OVERRIDE|SETANIM_FLAG_HOLD );
 			}
@@ -603,80 +577,94 @@ Mark1_FireRocket
 void Mark1_FireRocket(void)
 {
 	mdxaBone_t	boltMatrix;
-	vec3_t	muzzle1,enemy_org1,delta1,angleToEnemy1;
+	vec3_t	muzzle1, enemy_org1, delta1, angleToEnemy1;
 	static	vec3_t	forward, vright, up;
 
-	int	damage	= 50;
-
-	gi.G2API_GetBoltMatrix( NPC->ghoul2, NPC->playerModel,
-				NPC->genericBolt5,
-				&boltMatrix, NPC->currentAngles, NPC->currentOrigin, (cg.time?cg.time:level.time),
-				NULL, NPC->s.modelScale );
-
-	gi.G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, muzzle1 );
-
-	if (g_spskill->integer > 3) 
-	{
-		damage = ROCKET_NPC_DAMAGE_HARD;
-
-		G_PlayEffect("rocket/muzzle_flash", muzzle1);
-
-		CalcEntitySpot(NPC->enemy, SPOT_GROUND, enemy_org1);
-		VectorSubtract(enemy_org1, muzzle1, delta1);
-		vectoangles(delta1, angleToEnemy1);
-		AngleVectors(angleToEnemy1, forward, vright, up);
-
-		G_Sound(NPC, G_SoundIndex("sound/weapons/rocket/fire"));
-
-		gentity_t *missile = CreateMissile(muzzle1, forward, ROCKET_VELOCITY, 10000, NPC);
-
-		missile->classname = "rocket_proj";
-		missile->s.weapon = WP_ROCKET_LAUNCHER;
-		missile->mass = 10;
-
-		VectorSet(missile->maxs, ROCKET_SIZE, ROCKET_SIZE, ROCKET_SIZE);
-		VectorScale(missile->maxs, -1, missile->mins);
-
-		missile->damage = damage;
-		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-		missile->methodOfDeath = MOD_ROCKET;
-		missile->splashMethodOfDeath = MOD_ROCKET;
-		missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
-		missile->splashDamage = ROCKET_SPLASH_DAMAGE;
-		missile->splashRadius = ROCKET_SPLASH_RADIUS;
-
-		// we don't want it to bounce
-		missile->bounceCount = 0;
-	}
+	int	damage = BOWCASTER_NPC_DAMAGE_EASY;
+	if (g_spskill->integer == 1)
+		damage = BOWCASTER_NPC_DAMAGE_NORMAL;
 	else
-	{
-		//	G_PlayEffect( "blaster/muzzle_flash", muzzle1 );
+		damage = BOWCASTER_NPC_DAMAGE_HARD;
 
-		CalcEntitySpot(NPC->enemy, SPOT_HEAD, enemy_org1);
-		VectorSubtract(enemy_org1, muzzle1, delta1);
-		vectoangles(delta1, angleToEnemy1);
-		AngleVectors(angleToEnemy1, forward, vright, up);
+	gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->playerModel,
+		NPC->genericBolt5,
+		&boltMatrix, NPC->currentAngles, NPC->currentOrigin, (cg.time ? cg.time : level.time),
+		NULL, NPC->s.modelScale);
 
-		G_Sound(NPC, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzle1);
 
-		gentity_t *missile = CreateMissile(muzzle1, forward, BOWCASTER_VELOCITY, 10000, NPC);
+	G_PlayEffect( "bowcaster/muzzle_flash", muzzle1 );
 
-		missile->classname = "bowcaster_proj";
-		missile->s.weapon = WP_BOWCASTER;
+	CalcEntitySpot(NPC->enemy, SPOT_HEAD, enemy_org1);
+	VectorSubtract(enemy_org1, muzzle1, delta1);
+	vectoangles(delta1, angleToEnemy1);
+	AngleVectors(angleToEnemy1, forward, vright, up);
 
-		VectorSet(missile->maxs, BOWCASTER_SIZE, BOWCASTER_SIZE, BOWCASTER_SIZE);
-		VectorScale(missile->maxs, -1, missile->mins);
+	G_Sound(NPC, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
 
-		missile->damage = damage;
-		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-		missile->methodOfDeath = MOD_ENERGY;
-		missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
-		missile->splashDamage = BOWCASTER_SPLASH_DAMAGE;
-		missile->splashRadius = BOWCASTER_SPLASH_RADIUS;
+	gentity_t *missile = CreateMissile(muzzle1, forward, BOWCASTER_VELOCITY, 10000, NPC);
 
-		// we don't want it to bounce
-		missile->bounceCount = 0;
-	}
+	missile->classname = "bowcaster_proj";
+	missile->s.weapon = WP_BOWCASTER;
+
+	VectorSet(missile->maxs, BOWCASTER_SIZE, BOWCASTER_SIZE, BOWCASTER_SIZE);
+	VectorScale(missile->maxs, -1, missile->mins);
+
+	missile->damage = damage;
+	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
+	missile->methodOfDeath = MOD_ENERGY;
+	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
+	missile->splashDamage = BOWCASTER_SPLASH_DAMAGE;
+	missile->splashRadius = BOWCASTER_SPLASH_RADIUS;
+
+	// we don't want it to bounce
+	missile->bounceCount = 0;
+
+}
+
+void Mark1_ActuallyFireRocket(void)
+{
+	mdxaBone_t	boltMatrix;
+	vec3_t	muzzle1, enemy_org1, delta1, angleToEnemy1;
+	static	vec3_t	forward, vright, up;
+
+	int	damage = ROCKET_NPC_DAMAGE_HARD;
+
+	gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->playerModel,
+		NPC->genericBolt5,
+		&boltMatrix, NPC->currentAngles, NPC->currentOrigin, (cg.time ? cg.time : level.time),
+		NULL, NPC->s.modelScale);
+
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzle1);
+
+	G_PlayEffect("rocket/muzzle_flash", muzzle1);
+
+	CalcEntitySpot(NPC->enemy, SPOT_GROUND, enemy_org1);
+	VectorSubtract(enemy_org1, muzzle1, delta1);
+	vectoangles(delta1, angleToEnemy1);
+	AngleVectors(angleToEnemy1, forward, vright, up);
+
+	G_Sound(NPC, G_SoundIndex("sound/weapons/rocket/fire"));
+
+	gentity_t *missile = CreateMissile(muzzle1, forward, ROCKET_VELOCITY, 10000, NPC);
+
+	missile->classname = "rocket_proj";
+	missile->s.weapon = WP_ROCKET_LAUNCHER;
+	missile->mass = 10;
+
+	VectorSet(missile->maxs, ROCKET_SIZE, ROCKET_SIZE, ROCKET_SIZE);
+	VectorScale(missile->maxs, -1, missile->mins);
+
+	missile->damage = damage;
+	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
+	missile->methodOfDeath = MOD_ROCKET;
+	missile->splashMethodOfDeath = MOD_ROCKET;
+	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
+	missile->splashDamage = ROCKET_SPLASH_DAMAGE;
+	missile->splashRadius = ROCKET_SPLASH_RADIUS;
+
+	// we don't want it to bounce
+	missile->bounceCount = 0;
 }
 
 /*
@@ -686,9 +674,12 @@ Mark1_RocketAttack
 */
 void Mark1_RocketAttack( qboolean advance )
 {
-	if ( TIMER_Done( NPC, "attackDelay" ) )	// Attack?
+	if ( TIMER_Done( NPC, "attackDelayRocket" ) )	// Attack?
 	{
-		TIMER_Set( NPC, "attackDelay", Q_irand( 1000, 3000) );
+		if (g_spskill->integer > 3)
+			TIMER_Set(NPC, "attackDelayRocket", Q_irand(500, 1500));
+		else
+			TIMER_Set(NPC, "attackDelayRocket", Q_irand(1000, 3000));
  		NPC_SetAnim( NPC, SETANIM_TORSO, BOTH_ATTACK2, SETANIM_FLAG_OVERRIDE|SETANIM_FLAG_HOLD );
 		Mark1_FireRocket();
 	}
@@ -698,6 +689,24 @@ void Mark1_RocketAttack( qboolean advance )
 	}
 }
 
+/*
+-------------------------
+Mark1_ActualRocketAttack
+-------------------------
+*/
+void Mark1_ActualRocketAttack(qboolean advance)
+{
+	if (TIMER_Done(NPC, "attackDelayRocket"))	// Attack?
+	{
+		TIMER_Set(NPC, "attackDelayRocket", Q_irand(1500, 3000));
+		NPC_SetAnim(NPC, SETANIM_TORSO, BOTH_ATTACK2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		Mark1_ActuallyFireRocket();
+	}
+	else if (advance)
+	{
+		Mark1_Hunt();
+	}
+}
 /*
 -------------------------
 Mark1_AttackDecision
@@ -741,36 +750,35 @@ void Mark1_AttackDecision( void )
 	blasterTest = gi.G2API_GetSurfaceRenderStatus( &NPC->ghoul2[NPC->playerModel], "l_arm" );
 	rocketTest = gi.G2API_GetSurfaceRenderStatus( &NPC->ghoul2[NPC->playerModel], "r_arm" );
 
-	// It has both side weapons
-	if (!blasterTest  && !rocketTest)
+	// Both weapons broken
+	if (blasterTest  && rocketTest)
 	{
-		;	// So do nothing.
+		return;
 	}
-	else if (blasterTest)
+	else
 	{
-		distRate = DIST_LONG;
+		// We can see enemy so shoot him if timers let you.
+		NPC_FaceEnemy(qtrue);
+	}
+
+	if (blasterTest)
+	{
+		if (g_spskill->integer > 3 && distRate == DIST_LONG)
+			Mark1_ActualRocketAttack(advance);
+		else
+			Mark1_RocketAttack(advance);
 	}
 	else if (rocketTest)
 	{
-		distRate = DIST_MELEE;
-	}
-	else	// It should never get here, but just in case
-	{
-		NPC->health = 0;
-		NPC->client->ps.stats[STAT_HEALTH] = 0;
-		GEntity_DieFunc(NPC, NPC, NPC, 100, MOD_UNKNOWN);
-	}
-
-	// We can see enemy so shoot him if timers let you.
-	NPC_FaceEnemy( qtrue );
-
-	if (distRate == DIST_MELEE)
-	{
 		Mark1_BlasterAttack(advance);
 	}
-	else if (distRate == DIST_LONG)
+	else
 	{
-		Mark1_RocketAttack(advance);
+		Mark1_BlasterAttack(qfalse);
+		if (g_spskill->integer > 3 && distRate == DIST_LONG)
+			Mark1_ActualRocketAttack(advance);
+		else
+			Mark1_RocketAttack(advance);
 	}
 }
 
