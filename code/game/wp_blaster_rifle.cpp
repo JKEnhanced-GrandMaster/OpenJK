@@ -133,6 +133,20 @@ void WP_FireBlaster( gentity_t *ent, qboolean alt_fire )
 	if ( ent->client && ent->client->NPC_class == CLASS_VEHICLE )
 	{//no inherent aim screw up
 	}
+	else if (g_spskill->integer > 3 && 
+		(ent->client && ent->client->ps.forcePowersActive&(1 << FP_SEE)))
+	{
+		float spread;
+		if (ent->client->ps.forcePowerLevel[FP_SEE] >= FORCE_LEVEL_3)
+			spread = 0.4f;
+		else if (ent->client->ps.forcePowerLevel[FP_SEE] == FORCE_LEVEL_2)
+			spread = 0.6f;
+		else
+			spread = 0.8f;
+
+		angs[PITCH] += Q_flrand(-spread, spread) * (alt_fire ? BLASTER_ALT_SPREAD : BLASTER_MAIN_SPREAD);
+		angs[YAW] += Q_flrand(-spread, spread) * (alt_fire ? BLASTER_ALT_SPREAD : BLASTER_MAIN_SPREAD);
+	}
 	else if ( !(ent->client->ps.forcePowersActive&(1<<FP_SEE))
 		|| ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2 )
 	{//force sight 2+ gives perfect aim
