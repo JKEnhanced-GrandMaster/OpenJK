@@ -34,6 +34,7 @@ Mark1 | Can shoot with both guns simultaneously at any range. | *Shot one at a t
  \\_ | Blaster bursts are fired twice as often and they are longer. | *Why not?* | Yes
  \\_ | The arms are four times as durable. | *They were too easy to destroy.* | Yes
  \\_ | Shoots rockets instead of bowcaster bolts from a distance. | *These things are actually scary now!* | Yes
+Mine Monster | Runs right onto your skin. | *Doesn't run close enough to attack.* | No
 
 ### Force
 General | Changes | Original | Requires GM difficulty
