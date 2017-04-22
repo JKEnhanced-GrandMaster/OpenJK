@@ -25,12 +25,12 @@ General | Changes | Requires GM difficulty
 Vision | By default NPCs can see roughly 50% further. | Yes
 
 NPC | Changes | Original | Requires GM difficulty
-:---:|---|:---:
+:---:|---|---|:---:
 Assassin Droid | Can shoot while shield is up. | *Could not shoot.* | Yes
 Mark1 | Can shoot with both guns simultaneously at any range. | *Shot one at a time depending on distance, because bowcaster is supposed to be a rocket launcher.* | No
  \\_ | Bowcaster damage scales with difficulty. | *Used a very high static value.* | No
  \\_ | Prefers to keep a distance to enemy. | *Used to run all the way up to your face.* | No
- \\_ | Shoots bowcaster bolts twice as often. | *The delay was unnecessarily long.* | yes
+ \\_ | Shoots bowcaster bolts twice as often. | *The delay was unnecessarily long.* | Yes
  \\_ | Blaster bursts are fired twice as often and they are longer. | *Why not?* | Yes
  \\_ | The arms are four times as durable. | *They were too easy to destroy.* | Yes
  \\_ | Shoots rockets instead of bowcaster bolts from a distance. | *These things are actually scary now!* | Yes
