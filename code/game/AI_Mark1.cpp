@@ -93,8 +93,7 @@ void NPC_Mark1_Precache(void)
 	RegisterItem( FindItemForAmmo( AMMO_BLASTER ));
 	if (g_spskill->integer > 3)
 		RegisterItem(FindItemForWeapon(WP_ROCKET_LAUNCHER));
-	else
-		RegisterItem(FindItemForWeapon(WP_BOWCASTER));
+	RegisterItem(FindItemForWeapon(WP_BOWCASTER));
 	RegisterItem( FindItemForWeapon( WP_BRYAR_PISTOL ));
 }
 
@@ -157,58 +156,28 @@ void Mark1Dead_FireRocket(void)
 	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzle1);
 	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, muzzle_dir);
 
-	if (g_spskill->integer > 3)
-	{
-		damage = ROCKET_NPC_DAMAGE_HARD;
+	G_PlayEffect("bryar/muzzle_flash", muzzle1, muzzle_dir);
 
-		G_PlayEffect("rocket/muzzle_flash", muzzle1);
+	G_Sound(NPC, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
 
-		G_Sound(NPC, G_SoundIndex("sound/weapons/rocket/fire"));
+	gentity_t *missile = CreateMissile(muzzle1, muzzle_dir, BOWCASTER_VELOCITY, 10000, NPC);
 
-		gentity_t *missile = CreateMissile(muzzle1, muzzle_dir, ROCKET_VELOCITY, 10000, NPC);
+	missile->classname = "bowcaster_proj";
+	missile->s.weapon = WP_BOWCASTER;
 
-		missile->classname = "rocket_proj";
-		missile->s.weapon = WP_ROCKET_LAUNCHER;
-		missile->mass = 10;
+	VectorSet(missile->maxs, BOWCASTER_SIZE, BOWCASTER_SIZE, BOWCASTER_SIZE);
+	VectorScale(missile->maxs, -1, missile->mins);
 
-		VectorSet(missile->maxs, ROCKET_SIZE, ROCKET_SIZE, ROCKET_SIZE);
-		VectorScale(missile->maxs, -1, missile->mins);
+	missile->damage = damage;
+	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
+	missile->methodOfDeath = MOD_ENERGY;
+	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
+	missile->splashDamage = BOWCASTER_SPLASH_DAMAGE;
+	missile->splashRadius = BOWCASTER_SPLASH_RADIUS;
 
-		missile->damage = damage;
-		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-		missile->methodOfDeath = MOD_ROCKET;
-		missile->splashMethodOfDeath = MOD_ROCKET;
-		missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
-		missile->splashDamage = ROCKET_SPLASH_DAMAGE;
-		missile->splashRadius = ROCKET_SPLASH_RADIUS;
+	// we don't want it to bounce
+	missile->bounceCount = 0;
 
-		// we don't want it to bounce
-		missile->bounceCount = 0;
-	}
-	else
-	{
-		//	G_PlayEffect( "blaster/muzzle_flash", muzzle1 );
-
-		G_Sound(NPC, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
-
-		gentity_t *missile = CreateMissile(muzzle1, muzzle_dir, BOWCASTER_VELOCITY, 10000, NPC);
-
-		missile->classname = "bowcaster_proj";
-		missile->s.weapon = WP_BOWCASTER;
-
-		VectorSet(missile->maxs, BOWCASTER_SIZE, BOWCASTER_SIZE, BOWCASTER_SIZE);
-		VectorScale(missile->maxs, -1, missile->mins);
-
-		missile->damage = damage;
-		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-		missile->methodOfDeath = MOD_ENERGY;
-		missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
-		missile->splashDamage = BOWCASTER_SPLASH_DAMAGE;
-		missile->splashRadius = BOWCASTER_SPLASH_RADIUS;
-
-		// we don't want it to bounce
-		missile->bounceCount = 0;
-	}
 }
 
 /*
@@ -624,68 +593,78 @@ void Mark1_FireRocket(void)
 
 	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzle1);
 
-	if (g_spskill->integer > 3) 
-	{
-		damage = ROCKET_NPC_DAMAGE_HARD;
+	G_PlayEffect( "bowcaster/muzzle_flash", muzzle1 );
 
-		G_PlayEffect("rocket/muzzle_flash", muzzle1);
+	CalcEntitySpot(NPC->enemy, SPOT_HEAD, enemy_org1);
+	VectorSubtract(enemy_org1, muzzle1, delta1);
+	vectoangles(delta1, angleToEnemy1);
+	AngleVectors(angleToEnemy1, forward, vright, up);
 
-		CalcEntitySpot(NPC->enemy, SPOT_GROUND, enemy_org1);
-		VectorSubtract(enemy_org1, muzzle1, delta1);
-		vectoangles(delta1, angleToEnemy1);
-		AngleVectors(angleToEnemy1, forward, vright, up);
+	G_Sound(NPC, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
 
-		G_Sound(NPC, G_SoundIndex("sound/weapons/rocket/fire"));
+	gentity_t *missile = CreateMissile(muzzle1, forward, BOWCASTER_VELOCITY, 10000, NPC);
 
-		gentity_t *missile = CreateMissile(muzzle1, forward, ROCKET_VELOCITY, 10000, NPC);
+	missile->classname = "bowcaster_proj";
+	missile->s.weapon = WP_BOWCASTER;
 
-		missile->classname = "rocket_proj";
-		missile->s.weapon = WP_ROCKET_LAUNCHER;
-		missile->mass = 10;
+	VectorSet(missile->maxs, BOWCASTER_SIZE, BOWCASTER_SIZE, BOWCASTER_SIZE);
+	VectorScale(missile->maxs, -1, missile->mins);
 
-		VectorSet(missile->maxs, ROCKET_SIZE, ROCKET_SIZE, ROCKET_SIZE);
-		VectorScale(missile->maxs, -1, missile->mins);
+	missile->damage = damage;
+	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
+	missile->methodOfDeath = MOD_ENERGY;
+	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
+	missile->splashDamage = BOWCASTER_SPLASH_DAMAGE;
+	missile->splashRadius = BOWCASTER_SPLASH_RADIUS;
 
-		missile->damage = damage;
-		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-		missile->methodOfDeath = MOD_ROCKET;
-		missile->splashMethodOfDeath = MOD_ROCKET;
-		missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
-		missile->splashDamage = ROCKET_SPLASH_DAMAGE;
-		missile->splashRadius = ROCKET_SPLASH_RADIUS;
+	// we don't want it to bounce
+	missile->bounceCount = 0;
 
-		// we don't want it to bounce
-		missile->bounceCount = 0;
-	}
-	else
-	{
-		//	G_PlayEffect( "blaster/muzzle_flash", muzzle1 );
+}
 
-		CalcEntitySpot(NPC->enemy, SPOT_HEAD, enemy_org1);
-		VectorSubtract(enemy_org1, muzzle1, delta1);
-		vectoangles(delta1, angleToEnemy1);
-		AngleVectors(angleToEnemy1, forward, vright, up);
+void Mark1_ActuallyFireRocket(void)
+{
+	mdxaBone_t	boltMatrix;
+	vec3_t	muzzle1, enemy_org1, delta1, angleToEnemy1;
+	static	vec3_t	forward, vright, up;
 
-		G_Sound(NPC, G_SoundIndex("sound/chars/mark1/misc/mark1_fire"));
+	int	damage = ROCKET_NPC_DAMAGE_HARD;
 
-		gentity_t *missile = CreateMissile(muzzle1, forward, BOWCASTER_VELOCITY, 10000, NPC);
+	gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->playerModel,
+		NPC->genericBolt5,
+		&boltMatrix, NPC->currentAngles, NPC->currentOrigin, (cg.time ? cg.time : level.time),
+		NULL, NPC->s.modelScale);
 
-		missile->classname = "bowcaster_proj";
-		missile->s.weapon = WP_BOWCASTER;
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzle1);
 
-		VectorSet(missile->maxs, BOWCASTER_SIZE, BOWCASTER_SIZE, BOWCASTER_SIZE);
-		VectorScale(missile->maxs, -1, missile->mins);
+	G_PlayEffect("rocket/muzzle_flash", muzzle1);
 
-		missile->damage = damage;
-		missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-		missile->methodOfDeath = MOD_ENERGY;
-		missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
-		missile->splashDamage = BOWCASTER_SPLASH_DAMAGE;
-		missile->splashRadius = BOWCASTER_SPLASH_RADIUS;
+	CalcEntitySpot(NPC->enemy, SPOT_GROUND, enemy_org1);
+	VectorSubtract(enemy_org1, muzzle1, delta1);
+	vectoangles(delta1, angleToEnemy1);
+	AngleVectors(angleToEnemy1, forward, vright, up);
 
-		// we don't want it to bounce
-		missile->bounceCount = 0;
-	}
+	G_Sound(NPC, G_SoundIndex("sound/weapons/rocket/fire"));
+
+	gentity_t *missile = CreateMissile(muzzle1, forward, ROCKET_VELOCITY, 10000, NPC);
+
+	missile->classname = "rocket_proj";
+	missile->s.weapon = WP_ROCKET_LAUNCHER;
+	missile->mass = 10;
+
+	VectorSet(missile->maxs, ROCKET_SIZE, ROCKET_SIZE, ROCKET_SIZE);
+	VectorScale(missile->maxs, -1, missile->mins);
+
+	missile->damage = damage;
+	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
+	missile->methodOfDeath = MOD_ROCKET;
+	missile->splashMethodOfDeath = MOD_ROCKET;
+	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
+	missile->splashDamage = ROCKET_SPLASH_DAMAGE;
+	missile->splashRadius = ROCKET_SPLASH_RADIUS;
+
+	// we don't want it to bounce
+	missile->bounceCount = 0;
 }
 
 void Mark1_ActuallyFireRocket(void)
