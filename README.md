@@ -19,19 +19,20 @@ Bowcaster | Primary projectiles have as much horizontal as they do vertical spre
  \\_ | Secondary is half as accurate as primary. | *Secondary is perfectly accurate.* | Yes
 
 ### NPCs
-Topic | Changes | Requires GM difficulty
+General | Changes | Requires GM difficulty
 :---:|---|:---:
 Vision | By default NPCs can see roughly 50% further. | Yes
+
+NPC | Changes | Requires GM difficulty
+:---:|---|:---:
+Assassin Droid | Can shoot while shield is up. | Yes
 
 ### Force
 General | Changes | Original | Requires GM difficulty
 ---|---|---|:---:
 Level Advancement | Dark/Light Power advancement limited to Core Power level. | *No restriction.* | No
 
-Saber Defense | Level 1 | Level 2 | Level 3 | Requires GM difficulty
+Force Power | Level 1 | Level 2 | Level 3 | Requires GM difficulty
 ---|---|---|---|:---:
-Deflect At Enemy | **5%**<br>*0%* | **10%**<br>*25%* | **20%**<br>*100%* | Yes
-
-Force Sense | Level 1 | Level 2 | Level 3 | Requires GM<br>difficulty
----|---|---|---|:---:
-Weapon Spread Reduction | **20%**<br>*0%* | **40%**<br>*100%* | **60%**<br>*100%* | Yes
+Saber Defense | Perfect Deflect: **5%** *(0%)* | Perfect Deflect: **10%** *(25%)* | Perfect Deflect: **20%** *(100%)* | Yes
+Force Sense | Spread Reduction: **20%** *(0%)* | Spread Reduction: **40%** *(100%)* | Spread Reduction: **60%** *(100%)* | Yes
