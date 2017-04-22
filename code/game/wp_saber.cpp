@@ -14763,8 +14763,11 @@ static void WP_ForcePowerRun( gentity_t *self, forcePowers_t forcePower, usercmd
 					{//no damage at level 1
 						WP_ForcePowerDrain( self, FP_GRIP, 3 );
 					}
-					if ( self->client->NPC_class == CLASS_KYLE
-						&& (self->spawnflags&1) )
+					if (( self->client->NPC_class == CLASS_KYLE
+						&& (self->spawnflags&1) ) ||
+						g_spskill->integer > 3 && 
+						(self->client->NPC_class == CLASS_DESANN || 
+						self->client->NPC_class == CLASS_REBORN && (self->client->ps.weapon == WP_NONE || self->client->ps.weapon == WP_MELEE)))
 					{//"Boss" Kyle
 						if ( gripEnt->client )
 						{
@@ -14779,14 +14782,18 @@ static void WP_ForcePowerRun( gentity_t *self, forcePowers_t forcePower, usercmd
 								if ( Q_irand( 0, 1 ) )
 								{//throw him to my left
 									NPC_SetAnim( self, SETANIM_BOTH, BOTH_TOSS1, SETANIM_FLAG_OVERRIDE|SETANIM_FLAG_HOLD );
-									VectorScale( vRt, -1500.0f, gripEnt->client->ps.velocity );
+									VectorScale( vRt, -1000.0f, gripEnt->client->ps.velocity );
 									G_Knockdown( gripEnt, self, vRt, 500, qfalse );
+									if (g_spskill->integer > 3)
+										G_Damage(gripEnt, self, self, vRt, gripOrg, 15, DAMAGE_NO_ARMOR, MOD_IMPACT);
 								}
 								else
 								{//throw him to my right
 									NPC_SetAnim( self, SETANIM_BOTH, BOTH_TOSS2, SETANIM_FLAG_OVERRIDE|SETANIM_FLAG_HOLD );
-									VectorScale( vRt, 1500.0f, gripEnt->client->ps.velocity );
+									VectorScale( vRt, 1000.0f, gripEnt->client->ps.velocity );
 									G_Knockdown( gripEnt, self, vRt, 500, qfalse );
+									if (g_spskill->integer > 3)
+										G_Damage(gripEnt, self, self, vRt, gripOrg, 15, DAMAGE_NO_ARMOR, MOD_IMPACT);
 								}
 								//don't do anything for a couple seconds
 								self->client->ps.weaponTime = self->client->ps.torsoAnimTimer + 2000;

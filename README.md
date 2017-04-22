@@ -27,6 +27,9 @@ Vision | By default NPCs can see roughly 50% further. | Yes
 NPC | Changes | Original | Requires GM difficulty
 :---:|---|---|:---:
 Assassin Droid | Can shoot while shield is up. | *Could not shoot.* | Yes
+Kyle (Boss) | Grip 'toss aside' strength is reduced to about 66%. | *It was ridiculous.* | No
+ \\_ | Grip toss deals 15 impact damage. | *Deals no extra damage.* | Yes
+ \\_ | Desann and any unarmed normal reborn/cultist gains this ability. | *Only Kyle has grip toss.* | Yes
 Mark1 | Can shoot with both guns simultaneously at any range. | *Shot one at a time depending on distance, because bowcaster is supposed to be a rocket launcher.* | No
  \\_ | Bowcaster damage scales with difficulty. | *Used a very high static value.* | No
  \\_ | Prefers to keep a distance to enemy. | *Used to run all the way up to your face.* | No
@@ -45,3 +48,4 @@ Force Power | Level 1 | Level 2 | Level 3 | Requires GM difficulty
 ---|---|---|---|:---:
 Saber Defense | Perfect Deflect: **5%** *(0%)* | Perfect Deflect: **10%** *(25%)* | Perfect Deflect: **20%** *(100%)* | Yes
 Force Sense | Spread Reduction: **20%** *(0%)* | Spread Reduction: **40%** *(100%)* | Spread Reduction: **60%** *(100%)* | Yes
+
