@@ -2018,6 +2018,8 @@ qboolean NPC_ParseParms( const char *NPCName, gentity_t *NPC )
 		stats->vfov			= 60;
 		stats->vigilance	= 0.1f;
 		stats->visrange		= 1024;
+		if (g_spskill->integer > 3)
+			stats->visrange = 1536;
 		if (g_entities[ENTITYNUM_WORLD].max_health && stats->visrange>g_entities[ENTITYNUM_WORLD].max_health)
 		{
 			stats->visrange	= g_entities[ENTITYNUM_WORLD].max_health;
