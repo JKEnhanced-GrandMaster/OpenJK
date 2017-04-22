@@ -5728,6 +5728,8 @@ static void UI_InitAllocForcePowers ( const char *forceName )
 	itemDef_t	*item;
 	short		forcePowerI=0;
 	int			forcelevel;
+	int			forcetier=3;
+	//cvar_t*		g_spskill = Cvar_Get("g_spskill", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
 	menu = Menu_GetFocused();	// Get current menu
 
@@ -5749,10 +5751,14 @@ static void UI_InitAllocForcePowers ( const char *forceName )
 	{
 		playerState_t*		pState = cl->gentity->client;
 		forcelevel = pState->forcePowerLevel[powerEnums[forcePowerI].powerEnum];
+		//if (g_spskill->integer > 3)
+			forcetier = pState->forcePowerLevel[FP_PUSH];
 	}
 	else
 	{
 		forcelevel = uiInfo.forcePowerLevel[powerEnums[forcePowerI].powerEnum];
+		//if (g_spskill->integer > 3)
+			forcetier = uiInfo.forcePowerLevel[FP_PUSH];
 	}
 
 	char itemName[128];
@@ -5766,7 +5772,7 @@ static void UI_InitAllocForcePowers ( const char *forceName )
 		item->window.background = ui.R_RegisterShaderNoMip(itemGraphic);
 
 		// If maxed out on power - don't allow update
-		if (forcelevel>=3)
+		if (forcelevel>=forcetier)
 		{
 			Com_sprintf (itemName, sizeof(itemName), "%s_fbutton", powerEnums[forcePowerI].title);
 			item = (itemDef_s *) Menu_FindItemByName(menu, itemName);
