@@ -90,18 +90,32 @@ static void WP_BowcasterMainFire( gentity_t *ent )
 
 		vectoangles( forwardVec, angs );
 
-		if ( !(ent->client->ps.forcePowersActive&(1<<FP_SEE))
-			|| ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2 )
-		{//force sight 2+ gives perfect aim
-			//FIXME: maybe force sight level 3 autoaims some?
-			// add some slop to the fire direction
-			angs[PITCH] += Q_flrand(-1.0f, 1.0f) * BOWCASTER_ALT_SPREAD * 0.2f;
-			angs[YAW]	+= ((i+0.5f) * BOWCASTER_ALT_SPREAD - count * 0.5f * BOWCASTER_ALT_SPREAD );
-			if ( ent->NPC )
-			{
-				angs[PITCH] += ( Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD+(6-ent->NPC->currentAim)*0.25f) );
-				angs[YAW]	+= ( Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD+(6-ent->NPC->currentAim)*0.25f) );
-			}
+		float spread = 0.0f;
+		if (g_spskill->integer > 3 &&
+			(ent->client && ent->client->ps.forcePowersActive&(1 << FP_SEE)))
+		{
+			if (ent->client->ps.forcePowerLevel[FP_SEE] >= FORCE_LEVEL_3)
+				spread = 0.4f;
+			else if (ent->client->ps.forcePowerLevel[FP_SEE] == FORCE_LEVEL_2)
+				spread = 0.6f;
+			else
+				spread = 0.8f;
+		}
+		else if (!(ent->client->ps.forcePowersActive&(1 << FP_SEE))
+			|| ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+		{
+			spread = 1.0f;
+		}
+
+		angs[PITCH] += Q_flrand(-spread, spread) * BOWCASTER_ALT_SPREAD;
+		angs[YAW] += Q_flrand(-spread, spread) * BOWCASTER_ALT_SPREAD;
+
+		// add some slop to the fire direction
+		angs[YAW]	+= ((i+0.5f) * BOWCASTER_ALT_SPREAD*2.0f - count * 0.5f * BOWCASTER_ALT_SPREAD*2.0f );
+		if ( ent->NPC )
+		{
+			angs[PITCH] += ( Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD+(6-ent->NPC->currentAim)*0.25f) );
+			angs[YAW]	+= ( Q_flrand(-1.0f, 1.0f) * (BLASTER_NPC_SPREAD+(6-ent->NPC->currentAim)*0.25f) );
 		}
 
 		AngleVectors( angs, dir, NULL, NULL );
@@ -136,7 +150,7 @@ static void WP_BowcasterMainFire( gentity_t *ent )
 static void WP_BowcasterAltFire( gentity_t *ent )
 //---------------------------------------------------------
 {
-	vec3_t	start;
+	vec3_t	start, angs, dir;
 	int		damage	= weaponData[WP_BOWCASTER].altDamage;
 
 	VectorCopy( muzzle, start );
@@ -144,7 +158,27 @@ static void WP_BowcasterAltFire( gentity_t *ent )
 
 	WP_MissileTargetHint(ent, start, forwardVec);
 
-	gentity_t *missile = CreateMissile( start, forwardVec, BOWCASTER_VELOCITY, 10000, ent, qtrue );
+	vectoangles(forwardVec, angs);
+	if (g_spskill->integer > 3)
+	{
+		float spread = 1.0f;
+		if (ent->client && ent->client->ps.forcePowersActive&(1 << FP_SEE))
+		{
+			if (ent->client->ps.forcePowerLevel[FP_SEE] >= FORCE_LEVEL_3)
+				spread = 0.4f;
+			else if (ent->client->ps.forcePowerLevel[FP_SEE] == FORCE_LEVEL_2)
+				spread = 0.6f;
+			else
+				spread = 0.8f;
+		}
+
+		angs[PITCH] += Q_flrand(-spread, spread) * BOWCASTER_ALT_SPREAD * 0.5f;
+		angs[YAW] += Q_flrand(-spread, spread) * BOWCASTER_ALT_SPREAD * 0.5f;
+	}
+
+	AngleVectors(angs, dir, NULL, NULL);
+
+	gentity_t *missile = CreateMissile( start, dir, BOWCASTER_VELOCITY, 10000, ent, qtrue );
 
 	missile->classname = "bowcaster_alt_proj";
 	missile->s.weapon = WP_BOWCASTER;

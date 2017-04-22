@@ -223,7 +223,7 @@ typedef struct ammoData_s
 #define BOWCASTER_SPLASH_RADIUS		0
 #define BOWCASTER_SIZE				2
 
-#define BOWCASTER_ALT_SPREAD		5.0f
+#define BOWCASTER_ALT_SPREAD		1.0f
 #define BOWCASTER_VEL_RANGE			0.3f
 #define BOWCASTER_CHARGE_UNIT		200.0f	// bowcaster charging gives us one more unit every 200ms--if you change this, you'll have to do the same in bg_pmove
 
