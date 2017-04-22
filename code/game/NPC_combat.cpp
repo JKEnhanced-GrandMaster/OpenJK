@@ -1267,7 +1267,7 @@ void WeaponThink( qboolean inCombat )
 	}
 
 	// can't shoot while shield is up
-	if (NPC->flags&FL_SHIELDED && NPC->client->NPC_class==CLASS_ASSASSIN_DROID)
+	if (g_spskill->integer <= 3 && NPC->flags&FL_SHIELDED && NPC->client->NPC_class==CLASS_ASSASSIN_DROID)
 	{
 		return;
 	}
