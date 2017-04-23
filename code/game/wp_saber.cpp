@@ -14443,11 +14443,10 @@ static void WP_ForcePowerRun( gentity_t *self, forcePowers_t forcePower, usercmd
 				if (g_spskill->integer > 3)
 				{
 					int freeHealCap = self->client->ps.forcePowerLevel[FP_HEAL] * 50;
-					if (self->client->ps.forceHealCount >= freeHealCap + 5)
+					if (self->client->ps.forceHealCount > freeHealCap + 9)
 					{
-						self->client->ps.forceHealCount -= 5;
-						if (self->client->ps.forcePowerMax > 20)
-							self->client->ps.forcePowerMax -= 1;
+						self->client->ps.forceHealCount -= 10;
+						self->client->ps.forcePowerMax -= 1;
 					}
 				}
 			}
