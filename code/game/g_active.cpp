@@ -1727,8 +1727,19 @@ void ClientTimerActions( gentity_t *ent, int msec ) {
 		{//need to gradually reduce health back to max
 			if ( ent->health > ent->client->ps.stats[STAT_MAX_HEALTH] )
 			{//decrement it
-				ent->health--;
-				ent->client->ps.stats[STAT_HEALTH] = ent->health;
+				if (g_spskill->integer > 3)
+				{
+					if (!Q_irand(0, 1+ent->client->ps.forcePowerLevel[FP_DRAIN]))
+					{
+						ent->health--;
+						ent->client->ps.stats[STAT_HEALTH] = ent->health;
+					}
+				}
+				else
+				{
+					ent->health--;
+					ent->client->ps.stats[STAT_HEALTH] = ent->health;
+				}
 			}
 			else
 			{//done

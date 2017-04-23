@@ -11944,7 +11944,9 @@ void ForceDrain( gentity_t *self, qboolean triedDrain2 )
 
 	G_SoundOnEnt( self, CHAN_BODY, "sound/weapons/force/drain.mp3" );
 
-	WP_ForcePowerStart( self, FP_DRAIN, 0 );
+	// Only start ranged drain if not on GM difficulty or we are NPC
+	if ( g_spskill->integer <= 3 || self->NPC )
+		WP_ForcePowerStart( self, FP_DRAIN, 0 );
 }
 
 
@@ -12088,7 +12090,11 @@ void ForceDrainDamage( gentity_t *self, gentity_t *traceEnt, vec3_t dir, vec3_t 
 				*/
 
 				int maxHealth = self->client->ps.stats[STAT_MAX_HEALTH];
-				if ( self->client->ps.forcePowerLevel[FP_DRAIN] > FORCE_LEVEL_2 )
+				if ( g_spskill->integer > 3 )
+				{
+					maxHealth = 100;
+				}
+				else if ( self->client->ps.forcePowerLevel[FP_DRAIN] > FORCE_LEVEL_2 )
 				{//overcharge health
 					maxHealth = floor( (float)self->client->ps.stats[STAT_MAX_HEALTH] * 1.25f );
 				}
@@ -13679,6 +13685,11 @@ void WP_ForcePowerStart( gentity_t *self, forcePowers_t forcePower, int override
 		{
 			duration = 1000;
 		}
+
+		// Reduce max HP to 20 minimum for every drain use
+		if (g_spskill->integer > 3 && self->client->ps.stats[STAT_MAX_HEALTH] > 20)
+			self->client->ps.stats[STAT_MAX_HEALTH] -= 5;
+
 		self->client->ps.forcePowersActive |= ( 1 << forcePower );
 		break;
 	case FP_PROTECT:
@@ -14416,10 +14427,11 @@ static void WP_ForcePowerRun( gentity_t *self, forcePowers_t forcePower, usercmd
 				if (g_spskill->integer > 3)
 				{
 					int freeHealCap = self->client->ps.forcePowerLevel[FP_HEAL] * 50;
-					if (self->client->ps.forceHealCount > freeHealCap + 9)
+					if (self->client->ps.forceHealCount > freeHealCap + 4)
 					{
-						self->client->ps.forceHealCount -= 10;
-						self->client->ps.forcePowerMax -= 1;
+						self->client->ps.forceHealCount -= 5;
+						if (self->client->ps.forcePowerMax > 0)
+							self->client->ps.forcePowerMax -= 1;
 					}
 				}
 			}
