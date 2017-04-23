@@ -50,12 +50,12 @@ Level Advancement | Dark/Light Power advancement limited to Core Power level. | 
 
 Saber | Changes | Original | Requires GM difficulty
 ---|---|---|:---:
-Chance to deflect at enemy | Now 5%, 10% or 20% depending on Saber Defense level. | *Was 0%, 25% and 100%.* | Yes
+Chance to deflect directly at enemy | Now 5%, 10% or 20% depending on Saber Defense level. | *Was 0%, 25% and 100%.* | Yes
 
 Force Power | Level 1 | Level 2 | Level 3 | Original | Requires GM difficulty
----|---|---|---|:---:
+:---:|---|---|---|---|:---:
 Force Drain | Initiating drain reduces max hp every time by 5 to a minimum of 20hp. | Same as level 1. Ranged drain disabled. | Same as level 2. Ranged drain disabled. | *No penalty or disabling.* | Yes
- \\_ | Drain overcharge enabled up to 100hp. Every second has 33% chance to lose 1hp overcharge. | Same as level 1, but chance is 25%. | Same as level 2, but chance is 20%. | *Only level 3 had overcharge up to 125% max hp, reduced at a rate of 1hp per second.* | Yes
-Force Heal | For every 5hp healed max force points are reduced by 1 until the end of the level, **with no minimum**. 50hp can be healed without penalty. | Same as level 1, but 100hp without penalty. | Same as level 2, but 150hp without penalty. | *No penalty.* | Yes
+ \\_ | Drain overcharge enabled up to 100hp. There is a 33% chance to lose 1hp overcharge every second. | Same as level 1, but chance is 25%. | Same as level 2, but chance is 20%. | *Only level 3 had overcharge up to 125% max hp, reduced at a rate of 1hp per second.* | Yes
+Force Heal | For every 10hp healed max force points are reduced by 1 until the end of the level, **with no minimum**. 50hp can be healed without penalty. | Same as level 1, but 100hp without penalty. | Same as level 2, but 150hp without penalty. | *No penalty.* | Yes
  \\_ | Heals 10hp per second without limit. | Same as level 1. | Same as level 2. | *Healed 5hp, 5hp and 20hp per second in 25hp bursts.* | Yes
 Force Sense | Spread Reduction: 20% | Spread Reduction: 40% | Spread Reduction: 60% | *Spread reduction was 0%, 100% and 100%.* | Yes
