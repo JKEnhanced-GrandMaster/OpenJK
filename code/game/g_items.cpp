@@ -541,6 +541,8 @@ int Pickup_Weapon (gentity_t *ent, gentity_t *other)
 
 	if ( quantity )
 	{
+		if (g_spskill->integer > 3)
+			quantity /= 3;
 		// Give ammo
 		Add_Ammo( other, ent->item->giTag, quantity );
 	}

@@ -10513,6 +10513,8 @@ int FP_MaxForceHeal( gentity_t *self )
 
 int FP_ForceHealInterval( gentity_t *self )
 {
+	if (g_spskill->integer > 3)
+		return 100;
 	return (self->client->ps.forcePowerLevel[FP_HEAL]>FORCE_LEVEL_2)?50:FORCE_HEAL_INTERVAL;
 }
 
@@ -13617,7 +13619,8 @@ void WP_ForcePowerStart( gentity_t *self, forcePowers_t forcePower, int override
 	{
 	case FP_HEAL:
 		self->client->ps.forcePowersActive |= ( 1 << forcePower );
-		self->client->ps.forceHealCount = 0;
+		if (g_spskill->integer <= 3)
+			self->client->ps.forceHealCount = 0;
 		WP_StartForceHealEffects( self );
 		break;
 	case FP_LEVITATION:
@@ -14343,7 +14346,7 @@ static void WP_ForcePowerRun( gentity_t *self, forcePowers_t forcePower, usercmd
 	switch( (int)forcePower )
 	{
 	case FP_HEAL:
-		if ( self->client->ps.forceHealCount >= FP_MaxForceHeal(self) || self->health >= self->client->ps.stats[STAT_MAX_HEALTH] )
+		if ( g_spskill->integer <= 3 && self->client->ps.forceHealCount >= FP_MaxForceHeal(self) || self->health >= self->client->ps.stats[STAT_MAX_HEALTH] )
 		{//fully healed or used up all 25
 			if ( !Q3_TaskIDPending( self, TID_CHAN_VOICE ) )
 			{
@@ -14409,6 +14412,16 @@ static void WP_ForcePowerRun( gentity_t *self, forcePowers_t forcePower, usercmd
 				self->client->ps.forceHealCount += healAmount;
 				self->client->ps.forcePowerDebounce[FP_HEAL] = level.time + healInterval;
 				WP_ForcePowerDrain( self, forcePower, 4 );
+
+				if (g_spskill->integer > 3)
+				{
+					int freeHealCap = self->client->ps.forcePowerLevel[FP_HEAL] * 50;
+					if (self->client->ps.forceHealCount > freeHealCap + 9)
+					{
+						self->client->ps.forceHealCount -= 10;
+						self->client->ps.forcePowerMax -= 1;
+					}
+				}
 			}
 			else
 			{//stop
