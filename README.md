@@ -55,6 +55,7 @@ Chance to deflect directly at enemy | Now 5%, 10% or 20% depending on Saber Defe
 Force Power | Level 1 | Level 2 | Level 3 | Original | Requires GM difficulty
 :---:|---|---|---|---|:---:
 Force Speed | Field of view distortion halved. | Same as level 1. | Same as level 2. | *Unnecessarily high values.* | No
+ \\_ | Activating speed turns off the saber. Attacking ends speed. | Same as level 1. | Same as level 2. | *Can attack freely.* | Yes
 Force Push | Area of effect cone halved. | Same as level 1. | Same as level 2. | *Not halved.* | Yes
 Force Pull | No change. | Pull strength increased by 33%. | Pull strength reduced by 50%. | *Level 1/2 barely pulled a single target toward you while level 3 could send multiple targets to the orbit.* | No
  \\_ | Area of effect cone halved. | Same as level 1. | Same as level 2. | *Not halved* | Yes
