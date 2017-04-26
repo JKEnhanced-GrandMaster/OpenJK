@@ -31,7 +31,7 @@ Vision | By default NPCs can see roughly 50% further. | Yes
 NPC | Changes | Original | Requires GM difficulty
 :---:|---|---|:---:
 Assassin Droid | Can shoot while shield is up. | *Could not shoot.* | Yes
-Kyle (Boss) | Grip 'toss aside' strength is reduced to about two thirds. | *Tossed you ridiculously far.* | No
+Kyle (Boss) | Grip 'toss aside' strength is reduced by a third. | *Tossed you ridiculously far.* | No
  \\_ | Grip toss deals 15 impact damage. | *Deals no extra damage.* | Yes
  \\_ | Desann and any unarmed normal reborn/cultist gains this ability. | *Only Kyle has grip toss.* | Yes
 Mark1 | Can shoot with both guns simultaneously at any range. | *Shot one at a time depending on distance, because bowcaster is supposed to be a rocket launcher.* | No
@@ -54,8 +54,14 @@ Chance to deflect directly at enemy | Now 5%, 10% or 20% depending on Saber Defe
 
 Force Power | Level 1 | Level 2 | Level 3 | Original | Requires GM difficulty
 :---:|---|---|---|---|:---:
-Force Drain | Initiating drain reduces max hp every time by 5 to a minimum of 20hp. | Same as level 1. Ranged drain disabled. | Same as level 2. Ranged drain disabled. | *No penalty or disabling.* | Yes
- \\_ | Drain overcharge enabled up to 100hp. There is a 33% chance to lose 1hp overcharge every second. | Same as level 1, but chance is 25%. | Same as level 2, but chance is 20%. | *Only level 3 had overcharge up to 125% max hp, reduced at a rate of 1hp per second.* | Yes
+Force Speed | Field of view distortion halved. | Same as level 1. | Same as level 2. | *Unnecessarily high values.* | No
+Force Push | Area of effect cone halved. | Same as level 1. | Same as level 2. | *Not halved.* | Yes
+Force Pull | No change. | Pull strength increased by 33%. | Pull strength reduced by 50%. | *Level 1/2 barely pulled a single target toward you while level 3 could send multiple targets to the orbit.* | No
+ \\_ | Area of effect cone halved. | Same as level 1. | Same as level 2. | *Not halved* | Yes
+Force Sense | Spread Reduction: 20% | Spread Reduction: 40% | Spread Reduction: 60% | *Spread reduction was 0%, 100% and 100%.* | Yes
 Force Heal | For every 10hp healed max force points are reduced by 1 until the end of the level, **with no minimum**. 50hp can be healed without penalty. | Same as level 1, but 100hp without penalty. | Same as level 2, but 150hp without penalty. | *No penalty.* | Yes
  \\_ | Heals 10hp per second without limit. | Same as level 1. | Same as level 2. | *Healed 5hp, 5hp and 20hp per second in 25hp bursts.* | Yes
-Force Sense | Spread Reduction: 20% | Spread Reduction: 40% | Spread Reduction: 60% | *Spread reduction was 0%, 100% and 100%.* | Yes
+Force Drain | Initiating drain reduces max hp every time by 5 to a minimum of 20hp. | Same as level 1. Ranged drain disabled for player. | Same as level 2. | *No penalty or disabling.* | Yes
+ \\_ | Drain overcharge enabled up to 100hp. There is a 33% chance to lose 1hp overcharge every second. | Same as level 1, but chance is 25%. | Same as level 2, but chance is 20%. | *Only level 3 had overcharge up to 125% max hp, reduced at a rate of 1hp per second.* | Yes
+Force Grip | Duration is 1 second. | No change. | No chance. | *Level 1 duration was 5 seconds.* | Yes
+

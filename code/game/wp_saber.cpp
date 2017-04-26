@@ -298,9 +298,9 @@ float forceSpeedRangeMod[NUM_FORCE_POWER_LEVELS] =
 float forceSpeedFOVMod[NUM_FORCE_POWER_LEVELS] =
 {
 	0.0f,//none
-	20.0f,
-	30.0f,
-	40.0f
+	10.0f,
+	15.0f,
+	20.0f
 };
 
 int forceGripDamage[NUM_FORCE_POWER_LEVELS] =
@@ -9411,10 +9411,14 @@ void ForceThrow( gentity_t *self, qboolean pull, qboolean fake )
 	if ( pull )
 	{
 		cone = forcePullCone[self->client->ps.forcePowerLevel[FP_PULL]];
+		if (g_spskill->integer > 3)
+			cone /= 2;
 	}
 	else
 	{
 		cone = forcePushCone[self->client->ps.forcePowerLevel[FP_PUSH]];
+		if (g_spskill->integer > 3)
+			cone /= 2;
 	}
 
 	//	if ( cone >= 1.0f )
@@ -9815,10 +9819,10 @@ void ForceThrow( gentity_t *self, qboolean pull, qboolean fake )
 						{
 							knockback = 200;
 						}
-						if ( self->client->ps.forcePowerLevel[FP_PULL] < FORCE_LEVEL_3 )
-						{//maybe just knock them down
+						if (self->client->ps.forcePowerLevel[FP_PULL] >= FORCE_LEVEL_2)
+							knockback /= 2;
+						else
 							knockback /= 3;
-						}
 					}
 					else
 					{
@@ -11154,7 +11158,7 @@ void ForceGrip( gentity_t *self )
 	if ( self->client->ps.forcePowerLevel[FP_GRIP] < FORCE_LEVEL_2 )
 	{//just a duration
 		self->client->ps.forcePowerDebounce[FP_GRIP] = level.time + 250;
-		self->client->ps.forcePowerDuration[FP_GRIP] = level.time + 5000;
+		self->client->ps.forcePowerDuration[FP_GRIP] = level.time + (g_spskill->integer > 3 ? 1000 : 5000);
 
 		if ( self->m_pVehicle && self->m_pVehicle->m_pVehicleInfo->Inhabited( self->m_pVehicle ) )
 		{//empty vehicles don't make gripped noise
