@@ -8482,6 +8482,15 @@ void WP_SaberUpdate( gentity_t *self, usercmd_t *ucmd )
 		CG_CubeOutline( saberent->absmin, saberent->absmax, 50, WPDEBUG_SaberColor( self->client->ps.saber[0].blade[0].color ), 1 );
 	}
 #endif
+
+	// fade out speed if a saber is turned on
+	if (g_spskill->integer > 3 &&
+		self->client->ps.forcePowersActive&(1 << FP_SPEED) &&
+		self->client->ps.SaberActive() &&
+		self->client->ps.forcePowerDuration[FP_SPEED] > cg.time + 500)
+	{
+		self->client->ps.forcePowerDuration[FP_SPEED] = cg.time + Q_min(500, cg.time - self->client->ps.forcePowerDebounce[FP_SPEED]);
+	}
 }
 
 #define	MAX_RADIUS_ENTS			256	//NOTE: This can cause entities to be lost
@@ -13639,9 +13648,11 @@ void WP_ForcePowerStart( gentity_t *self, forcePowers_t forcePower, int override
 	case FP_SPEED:
 		//duration is always 5 seconds, player time
 		duration = ceil(FORCE_SPEED_DURATION*forceSpeedValue[self->client->ps.forcePowerLevel[FP_SPEED]]);//FIXME: because the timescale scales down (not instant), this doesn't end up being exactly right...
+		if (g_spskill->integer > 3 && self->client->ps.SaberActive())
+			WP_DeactivateSaber(self);
 		self->client->ps.forcePowersActive |= ( 1 << forcePower );
 		self->s.loopSound = G_SoundIndex( "sound/weapons/force/speedloop.wav" );
-		if ( self->client->ps.forcePowerLevel[FP_SPEED] > FORCE_LEVEL_2 )
+		if ( self->client->ps.forcePowerLevel[FP_SPEED] > FORCE_LEVEL_2 || g_spskill->integer > 3)
 		{//HACK: just using this as a timestamp for when the power started, setting debounce to current time shouldn't adversely affect anything else
 			self->client->ps.forcePowerDebounce[FP_SPEED] = level.time;
 		}

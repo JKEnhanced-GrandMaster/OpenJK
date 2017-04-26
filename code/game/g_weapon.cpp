@@ -1606,6 +1606,15 @@ void FireWeapon( gentity_t *ent, qboolean alt_fire )
 		}
 		AddSightEvent( ent, muzzle, alert*2, AEL_DISCOVERED, 20 );
 	}
+
+	// fade out speed if a saber is turned on
+	if (g_spskill->integer > 3 &&
+		!ent->NPC &&
+		ent->client->ps.forcePowersActive&(1 << FP_SPEED) &&
+		ent->client->ps.forcePowerDuration[FP_SPEED] > cg.time + 500)
+	{
+		ent->client->ps.forcePowerDuration[FP_SPEED] = cg.time + Q_min(500, cg.time - ent->client->ps.forcePowerDebounce[FP_SPEED]);
+	}
 }
 
 //NOTE: Emplaced gun moved to g_emplaced.cpp
