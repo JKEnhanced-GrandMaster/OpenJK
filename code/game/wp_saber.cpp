@@ -13567,7 +13567,8 @@ int WP_AbsorbConversion(gentity_t *attacked, int atdAbsLevel, gentity_t *attacke
 	{
 		addTot = 1;
 	}
-	attacked->client->ps.forcePower += addTot;
+	if (g_spskill->integer <= 3)
+		attacked->client->ps.forcePower += addTot;
 	if (attacked->client->ps.forcePower > attacked->client->ps.forcePowerMax)
 	{
 		attacked->client->ps.forcePower = attacked->client->ps.forcePowerMax;
@@ -13727,7 +13728,7 @@ void WP_ForcePowerStart( gentity_t *self, forcePowers_t forcePower, int override
 		self->s.loopSound = G_SoundIndex( "sound/weapons/force/protectloop.wav" );
 		break;
 	case FP_ABSORB:
-		duration = 20000;
+		duration = 5000;
 		self->client->ps.forcePowersActive |= ( 1 << forcePower );
 		G_SoundOnEnt( self, CHAN_ITEM, "sound/weapons/force/absorb.mp3" );
 		self->s.loopSound = G_SoundIndex( "sound/weapons/force/absorbloop.wav" );
