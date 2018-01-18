@@ -1758,7 +1758,7 @@ int ST_GetCPFlags( void )
 		{//hide
 			cpFlags = (CP_COVER|CP_AVOID|CP_SAFE|CP_RETREAT);
 			/*
-			if ( NPC->client->NPC_class == CLASS_SABOTEUR && !Q_irand( 0, 3 ) )
+			if ( (NPC->client->NPC_class == CLASS_SABOTEUR || NPC->NPC && NPC->NPC->stats.cloak) && !Q_irand( 0, 3 ) )
 			{
 				Saboteur_Cloak( NPC );
 			}
@@ -2359,6 +2359,9 @@ void NPC_BSST_Attack( void )
 			(NPCInfo->scriptFlags & SCF_ALT_FIRE) )
 		{//shooting an explosive, but enemy too close, switch to primary fire
 			NPCInfo->scriptFlags &= ~SCF_ALT_FIRE;
+			NPC_ChangeWeapon(NPC->client->ps.weapon);
+			NPC_UpdateAngles(qtrue, qtrue);
+			return;
 			//FIXME: we can never go back to alt-fire this way since, after this, we don't know if we were initially supposed to use alt-fire or not...
 		}
 	}
@@ -2374,6 +2377,17 @@ void NPC_BSST_Attack( void )
 				NPC_UpdateAngles( qtrue, qtrue );
 				return;
 			}
+		}
+	}
+	else
+	{
+		if ((NPC->client->ps.weapon == WP_FLECHETTE || NPC->client->ps.weapon == WP_REPEATER) &&
+			(NPCInfo->stats.altFire))
+		{//shooting an explosive, enemy was too close but not anymore
+			NPCInfo->scriptFlags |= SCF_ALT_FIRE;
+			NPC_ChangeWeapon(NPC->client->ps.weapon);
+			NPC_UpdateAngles(qtrue, qtrue);
+			return;
 		}
 	}
 
@@ -2625,7 +2639,7 @@ void NPC_BSST_Attack( void )
 	//FIXME: don't shoot right away!
 	if ( NPC->client->fireDelay )
 	{
-		if ( NPC->client->NPC_class == CLASS_SABOTEUR )
+		if (g_spskill->integer <= 3 && (NPC->client->NPC_class == CLASS_SABOTEUR || NPC->NPC && NPC->NPC->stats.cloak))
 		{
 			Saboteur_Decloak( NPC );
 		}
@@ -2644,7 +2658,7 @@ void NPC_BSST_Attack( void )
 	}
 	else if ( shoot )
 	{//try to shoot if it's time
-		if ( NPC->client->NPC_class == CLASS_SABOTEUR )
+		if (g_spskill->integer <= 3 && (NPC->client->NPC_class == CLASS_SABOTEUR || NPC->NPC && NPC->NPC->stats.cloak))
 		{
 			Saboteur_Decloak( NPC );
 		}
@@ -2680,7 +2694,7 @@ void NPC_BSST_Attack( void )
 	{
 		if ( NPC->attackDebounceTime < level.time )
 		{
-			if ( NPC->client->NPC_class == CLASS_SABOTEUR )
+			if ( NPC->client->NPC_class == CLASS_SABOTEUR || (NPC->NPC && NPC->NPC->stats.cloak))
 			{
 				Saboteur_Cloak( NPC );
 			}

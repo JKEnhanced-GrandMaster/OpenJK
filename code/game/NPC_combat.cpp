@@ -494,7 +494,7 @@ void G_SetEnemy( gentity_t *self, gentity_t *enemy )
 		//FIXME: Have to do this to prevent alert cascading
 		G_ClearEnemy( self );
 		self->enemy = enemy;
-		if (self->client && self->client->NPC_class == CLASS_SABOTEUR)
+		if (self->client && (self->client->NPC_class == CLASS_SABOTEUR || self->NPC && self->NPC->stats.cloak))
 		{
 			Saboteur_Cloak(NPC);					// Cloak
 			TIMER_Set(self, "decloakwait", 3000);	// Wait 3 sec before decloak and attack
@@ -1273,11 +1273,11 @@ void WeaponThink( qboolean inCombat )
 	}
 
 	// Can't Fire While Cloaked
-	if (NPC->client &&
+	/*if (NPC->client &&
 		(NPC->client->ps.powerups[PW_CLOAKED] || (level.time<NPC->client->ps.powerups[PW_UNCLOAKING])))
 	{
 		return;
-	}
+	}*/
 
 	if ( client->ps.weapon == WP_NONE )
 	{

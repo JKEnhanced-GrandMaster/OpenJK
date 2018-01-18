@@ -301,7 +301,7 @@ void NPC_SetMiscDefaultData( gentity_t *ent )
 	{
 		ent->flags |= FL_NO_KNOCKBACK;
 	}
-	else if ( ent->client->NPC_class == CLASS_SABOTEUR )
+	else if ( ent->client->NPC_class == CLASS_SABOTEUR || ent->NPC && ent->NPC->stats.cloak)
 	{//can cloak
 		ent->NPC->aiFlags |= NPCAI_SHIELDS;//give them the ability to cloak
 		if ( (ent->spawnflags&16) )
@@ -421,6 +421,10 @@ void NPC_SetMiscDefaultData( gentity_t *ent )
 			ent->NPC->stats.runSpeed = 280;
 			ent->NPC->stats.walkSpeed = 65;
 		}
+	}
+	if (ent->NPC && ent->NPC->stats.altFire)
+	{
+		ent->NPC->scriptFlags |= SCF_ALT_FIRE;
 	}
 	//***I'm not sure whether I should leave this as a TEAM_ switch, I think NPC_class may be more appropriate - dmv
 	switch(ent->client->playerTeam)

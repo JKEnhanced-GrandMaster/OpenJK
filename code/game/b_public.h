@@ -157,6 +157,8 @@ public:
 	//sex
 	sexType_t	sex;			//male, female, etc.
 
+	qboolean	altFire;
+	qboolean	cloak;
 
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const

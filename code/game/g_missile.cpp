@@ -549,7 +549,7 @@ void G_MissileImpacted( gentity_t *ent, gentity_t *other, vec3_t impactPos, vec3
 
 			if ( ent->s.weapon == WP_DEMP2 )
 			{//a hit with demp2 decloaks saboteurs
-				if ( other && other->client && other->client->NPC_class == CLASS_SABOTEUR )
+				if ( other && other->client && (other->client->NPC_class == CLASS_SABOTEUR || (other->NPC && other->NPC->stats.cloak)) )
 				{//FIXME: make this disabled cloak hold for some amount of time?
 					Saboteur_Decloak( other, Q_irand( 3000, 10000 ) );
 					if ( ent->methodOfDeath == MOD_DEMP2_ALT )

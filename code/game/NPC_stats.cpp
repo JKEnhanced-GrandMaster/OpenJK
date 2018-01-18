@@ -2030,6 +2030,9 @@ qboolean NPC_ParseParms( const char *NPCName, gentity_t *NPC )
 		stats->walkSpeed	= 90;
 		stats->runSpeed		= 300;
 		stats->acceleration	= 15;//Increase/descrease speed this much per frame (20fps)
+
+		stats->altFire		= qfalse;
+		stats->cloak		= qfalse;
 	}
 	else
 	{
@@ -3603,12 +3606,31 @@ qboolean NPC_ParseParms( const char *NPCName, gentity_t *NPC )
 					{
 						if ( n != 0 )
 						{
+							stats->altFire = qtrue;
 							NPC->NPC->scriptFlags |= SCF_ALT_FIRE;
 						}
 					}
 					continue;
 				}
 				//Other unique behaviors/numbers that are currently hardcoded?
+
+				//cloak
+				if (!Q_stricmp(token, "cloak"))
+				{
+					if (COM_ParseInt(&p, &n))
+					{
+						SkipRestOfLine(&p);
+						continue;
+					}
+					if (NPC->NPC)
+					{
+						if (n != 0)
+						{
+							stats->cloak = qtrue;
+						}
+					}
+					continue;
+				}
 			}
 
 			//force powers

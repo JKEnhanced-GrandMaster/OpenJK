@@ -113,7 +113,7 @@ void NPC_Sniper_Pain( gentity_t *self, gentity_t *inflictor, gentity_t *other, v
 {
 	self->NPC->localState = LSTATE_UNDERFIRE;
 
-	if ( self->client->NPC_class == CLASS_SABOTEUR )
+	if ( g_spskill->integer <= 3 && (self->client->NPC_class == CLASS_SABOTEUR || self->NPC && self->NPC->stats.cloak))
 	{
 		Saboteur_Decloak( self );
 	}
@@ -383,7 +383,7 @@ static void Sniper_CheckMoveState( void )
 			switch ( NPCInfo->squadState )
 			{
 			case SQUAD_RETREAT://was running away
-				if ( NPC->client->NPC_class == CLASS_SABOTEUR )
+				if ( NPC->client->NPC_class == CLASS_SABOTEUR || (NPC->NPC && NPC->NPC->stats.cloak))
 				{
 					Saboteur_Cloak( NPC );
 				}
@@ -445,7 +445,7 @@ static void Sniper_ResolveBlockedShot( void )
 					NPC_SetCombatPoint( cp );
 					NPC_SetMoveGoal( NPC, level.combatPoints[cp].origin, 8, qtrue, cp );
 					TIMER_Set( NPC, "duck", -1 );
-					if ( NPC->client->NPC_class == CLASS_SABOTEUR )
+					if ( g_spskill->integer <= 3 && (NPC->client->NPC_class == CLASS_SABOTEUR || NPC->NPC && NPC->NPC->stats.cloak))
 					{
 						Saboteur_Decloak( NPC );
 					}
@@ -676,7 +676,7 @@ void Sniper_StartHide( void )
 	int duckTime = Q_irand( 2000, 5000 );
 
 	TIMER_Set( NPC, "duck", duckTime );
-	if ( NPC->client->NPC_class == CLASS_SABOTEUR )
+	if ( NPC->client->NPC_class == CLASS_SABOTEUR || (NPC->NPC && NPC->NPC->stats.cloak))
 	{
 		Saboteur_Cloak( NPC );
 	}
@@ -838,7 +838,7 @@ void NPC_BSSniper_Attack( void )
 			if ( TIMER_Done( NPC, "watch" ) )
 			{//not while watching
 				ucmd.upmove = -127;
-				if ( NPC->client->NPC_class == CLASS_SABOTEUR )
+				if ( NPC->client->NPC_class == CLASS_SABOTEUR || (NPC->NPC && NPC->NPC->stats.cloak))
 				{
 					Saboteur_Cloak( NPC );
 				}
@@ -850,7 +850,7 @@ void NPC_BSSniper_Attack( void )
 	else
 	{//stop ducking!
 		TIMER_Set( NPC, "duck", -1 );
-		if ( NPC->client->NPC_class == CLASS_SABOTEUR )
+		if ( g_spskill->integer <= 3 && (NPC->client->NPC_class == CLASS_SABOTEUR || NPC->NPC && NPC->NPC->stats.cloak))
 		{
 			Saboteur_Decloak( NPC );
 		}
