@@ -34,7 +34,7 @@ Specific | Changes | Original | Requires GM difficulty
 :---:|---|---|:---:
 Assassin Droid | Can shoot while shield is up. | *Could not shoot.* | Yes
 Imperial Saboteur | Can shoot while cloaked. | *Could not shoot.* | No
- \\_ | Permanently cloaked, unless electrified. | *Decloaked periodically and when damaged. | Yes
+ \\_ | Permanently cloaked, unless electrified. | *Decloaked periodically and when damaged.* | Yes
 Kyle (Boss) | Grip 'toss aside' strength is reduced by a third. | *Tossed you ridiculously far.* | No
  \\_ | Grip toss deals 15 impact damage. | *Dealt no damage.* | Yes
  \\_ | Desann and any unarmed normal reborn/cultist gains this ability. | *Normally only Kyle has grip toss.* | Yes
