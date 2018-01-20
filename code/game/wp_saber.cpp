@@ -10526,9 +10526,7 @@ int FP_MaxForceHeal( gentity_t *self )
 
 int FP_ForceHealInterval( gentity_t *self )
 {
-	if (g_spskill->integer > 3)
-		return 100;
-	return (self->client->ps.forcePowerLevel[FP_HEAL]>FORCE_LEVEL_2)?50:FORCE_HEAL_INTERVAL;
+	return (self->client->ps.forcePowerLevel[FP_HEAL]>FORCE_LEVEL_2)?((g_spskill->integer > 3)?100:50):FORCE_HEAL_INTERVAL;
 }
 
 void ForceHeal( gentity_t *self )
@@ -10538,7 +10536,7 @@ void ForceHeal( gentity_t *self )
 		return;
 	}
 
-	if ( !WP_ForcePowerUsable( self, FP_HEAL, 20 ) )
+	if ( !WP_ForcePowerUsable( self, FP_HEAL, 10 ))
 	{//must have enough force power for at least 5 points of health
 		return;
 	}
@@ -11955,11 +11953,11 @@ void ForceDrain( gentity_t *self, qboolean triedDrain2 )
 		WP_ForcePowerStop( self, FP_ABSORB );
 	}
 
-	G_SoundOnEnt( self, CHAN_BODY, "sound/weapons/force/drain.mp3" );
-
 	// Only start ranged drain if not on GM difficulty or we are NPC
-	if ( g_spskill->integer <= 3 || self->NPC )
-		WP_ForcePowerStart( self, FP_DRAIN, 0 );
+	if (g_spskill->integer <= 3 || self->NPC) {
+		G_SoundOnEnt( self, CHAN_BODY, "sound/weapons/force/drain.mp3" );
+		WP_ForcePowerStart(self, FP_DRAIN, 0);
+	}
 }
 
 
@@ -13639,8 +13637,7 @@ void WP_ForcePowerStart( gentity_t *self, forcePowers_t forcePower, int override
 	{
 	case FP_HEAL:
 		self->client->ps.forcePowersActive |= ( 1 << forcePower );
-		if (g_spskill->integer <= 3)
-			self->client->ps.forceHealCount = 0;
+		self->client->ps.forceHealCount = 0;
 		WP_StartForceHealEffects( self );
 		break;
 	case FP_LEVITATION:
@@ -14373,7 +14370,7 @@ static void WP_ForcePowerRun( gentity_t *self, forcePowers_t forcePower, usercmd
 	switch( (int)forcePower )
 	{
 	case FP_HEAL:
-		if ( g_spskill->integer <= 3 && self->client->ps.forceHealCount >= FP_MaxForceHeal(self) || self->health >= self->client->ps.stats[STAT_MAX_HEALTH] )
+		if ( self->client->ps.forceHealCount >= FP_MaxForceHeal(self) || self->health >= self->client->ps.stats[STAT_MAX_HEALTH] )
 		{//fully healed or used up all 25
 			if ( !Q3_TaskIDPending( self, TID_CHAN_VOICE ) )
 			{
@@ -14416,7 +14413,7 @@ static void WP_ForcePowerRun( gentity_t *self, forcePowers_t forcePower, usercmd
 		}
 		else if ( self->client->ps.forcePowerDebounce[FP_HEAL] < level.time )
 		{//time to heal again
-			if ( WP_ForcePowerAvailable( self, forcePower, 4 ) )
+			if ( WP_ForcePowerAvailable( self, forcePower, 2 ))
 			{//have available power
 				int healInterval = FP_ForceHealInterval( self );
 				int	healAmount = 1;//hard, normal healing rate
@@ -14438,16 +14435,13 @@ static void WP_ForcePowerRun( gentity_t *self, forcePowers_t forcePower, usercmd
 				self->health += healAmount;
 				self->client->ps.forceHealCount += healAmount;
 				self->client->ps.forcePowerDebounce[FP_HEAL] = level.time + healInterval;
-				WP_ForcePowerDrain( self, forcePower, 4 );
+				WP_ForcePowerDrain( self, forcePower, 2);
 
 				if (g_spskill->integer > 3)
 				{
-					int freeHealCap = self->client->ps.forcePowerLevel[FP_HEAL] * 50;
-					if (self->client->ps.forceHealCount >= freeHealCap + 5)
+					if (self->client->ps.forcePowerMax > 20 && (self->client->ps.forceHealCount-1) % 5 == 0)
 					{
-						self->client->ps.forceHealCount -= 5;
-						if (self->client->ps.forcePowerMax > 20)
-							self->client->ps.forcePowerMax -= 1;
+						self->client->ps.forcePowerMax -= 1;
 					}
 				}
 			}
