@@ -14666,7 +14666,7 @@ void PM_AdjustAttackStates( pmove_t *pm )
 		// we are not alt-firing yet, but the alt-attack button was just pressed and
 		//	we either are ducking ( in which case we don't care if they are moving )...or they are not ducking...and also not moving right/forward.
 		if ( !(pm->ps->eFlags & EF_ALT_FIRING) && (pm->cmd.buttons & BUTTON_ALT_ATTACK)
-				&& ( pm->cmd.upmove < 0 || ( !pm->cmd.forwardmove && !pm->cmd.rightmove )))
+				&& ( pm->cmd.upmove < 0 || pm->cmd.buttons & BUTTON_WALKING || ( !pm->cmd.forwardmove && !pm->cmd.rightmove )))
 		{
 			// We just pressed the alt-fire key
 			if ( cg.zoomMode == 0 || cg.zoomMode == 3 )
@@ -14674,6 +14674,7 @@ void PM_AdjustAttackStates( pmove_t *pm )
 				G_SoundOnEnt( pm->gent, CHAN_AUTO, "sound/weapons/disruptor/zoomstart.wav" );
 				// not already zooming, so do it now
 				cg.zoomMode = 2;
+				cg.zoomDir = -1;
 				cg.zoomLocked = qfalse;
 				cg_zoomFov = 80.0f;//(cg.overrides.active&CG_OVERRIDE_FOV) ? cg.overrides.fov : cg_fov.value;
 			}
@@ -14691,8 +14692,12 @@ void PM_AdjustAttackStates( pmove_t *pm )
 			// Not pressing zoom any more
 			if ( cg.zoomMode == 2 )
 			{
-				// were zooming in, so now lock the zoom
-				cg.zoomLocked = qtrue;
+				float zoomFloored = cg_zoomFov + 0.001;
+				zoomFloored = zoomFloored/6.f - floorf(zoomFloored/6.f);
+				if (zoomFloored < 0.1f) {
+					// were zooming in, so now lock the zoom
+					cg.zoomLocked = qtrue;
+				}
 			}
 		}
 

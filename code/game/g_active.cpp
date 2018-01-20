@@ -4942,6 +4942,7 @@ extern cvar_t	*g_skippingcin;
 			if ( ( (ucmd->forwardmove||ucmd->rightmove)
 				   && ucmd->upmove >= 0 //crouching-moving is ok
 				   && !(ucmd->buttons&BUTTON_USE)/*leaning is ok*/
+				   && !(ucmd->buttons&BUTTON_WALKING) /*walking is ok*/
 				 )
 				 || ucmd->upmove > 0 //jumping not allowed
 			   )
