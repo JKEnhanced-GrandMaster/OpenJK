@@ -22,6 +22,7 @@ Bowcaster | Primary projectiles have as much horizontal as they do vertical spre
  \\_ | Multiple projectiles shooting arc reduced by 60%. | *Too wide spread with multiple projectiles to be useful when enemy is not in shooters face.* | No
  \\_ | Secondary is half as accurate as primary. | *Secondary is perfectly accurate.* | Yes
 Demp2 | Deals 300% or 400% extra damage to combat droids. | *Normally deals 500% or 700% extra.* | Yes
+Disruptor | Enabled scoping while walking. Zoom level can be changed using next/previous weapon bindings. | *Only crouched movement was possible. Zoom level could not be changed after initial zooming. | No
 
 ### NPCs
 General | Changes | Requires GM difficulty
