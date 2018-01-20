@@ -2610,7 +2610,7 @@ void CG_NextWeapon_f( void ) {
 	int		i;
 	int		original;
 
-	if (cg.zoomMode && cg.zoomMode < 3) {
+	if (cg.zoomMode == 2) {
 		cg.zoomLocked = qfalse;
 		cg.zoomDir = 1;
 		return;
@@ -2820,7 +2820,7 @@ void CG_PrevWeapon_f( void ) {
 	int		i;
 	int		original;
 
-	if (cg.zoomMode && cg.zoomMode < 3) {
+	if (cg.zoomMode == 2) {
 		cg.zoomLocked = qfalse;
 		cg.zoomDir = -1;
 		return;
