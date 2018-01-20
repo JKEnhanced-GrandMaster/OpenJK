@@ -47,6 +47,7 @@ Mark1 | Can shoot with both guns simultaneously at any range. | *Shot one at a t
  \\_ | Shoots rockets instead of bowcaster bolts from a distance. | *Judging by the code, the bowcaster was actually meant to be a rocket launcher!* | Yes
  \\_ | Blaster bursts are fired twice as often and they are longer. | *Why not?* | Yes
 Mine Monster | Runs right onto your skin. | *Didn't run close enough to attack.* | No
+Turret | Turns barrel twice as fast. | *Was easy to run around.* | Yes
 
 ### Force Powers
 General | Changes | Original | Requires GM difficulty

@@ -288,6 +288,11 @@ static void turret_aim( gentity_t *self )
 	float	maxYawSpeed		= ( self->spawnflags & SPF_TURRETG2_TURBO ) ? 30.0f : 14.0f;
 	float	maxPitchSpeed	= ( self->spawnflags & SPF_TURRETG2_TURBO ) ? 15.0f : 3.0f;
 
+	if (!(self->spawnflags & SPF_TURRETG2_TURBO) && g_spskill->integer > 3) {
+		maxYawSpeed *= 2;
+		maxPitchSpeed *= 2;
+	}
+
 	// move our gun base yaw to where we should be at this time....
 	EvaluateTrajectory( &self->s.apos, level.time, self->currentAngles );
 	self->currentAngles[YAW] = AngleNormalize360( self->currentAngles[YAW] );
