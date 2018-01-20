@@ -58,18 +58,18 @@ Saber | Changes | Original | Requires GM difficulty
 ---|---|---|:---:
 Chance to deflect directly at enemy | Now 5%, 10% or 20% depending on Saber Defense level. | *Was 0%, 25% and 100%.* | Yes
 
-Force Power | Level 1 | Level 2 | Level 3 | Original | Requires GM difficulty
-:---:|---|---|---|---|:---:
-Force Speed | Field of view distortion halved. | Same as level 1. | Same as level 2. | *Unnecessarily high values.* | No
- \\_ | Activating speed turns off the saber. Attacking ends speed. | Same as level 1. | Same as level 2. | *Could attack freely.* | Yes
-Force Push | Area of effect cone halved. | Same as level 1. | Same as level 2. | *Not halved.* | Yes
-Force Pull | No change. | Pull strength increased by 33%. | Pull strength reduced by 50%. | *Level 1/2 barely pulled a single target toward you while level 3 could send multiple targets to the orbit.* | No
- \\_ | Area of effect cone halved. | Same as level 1. | Same as level 2. | *Not halved.* | Yes
-Force Sense | Spread Reduction: 20% | Spread Reduction: 40% | Spread Reduction: 60% | *Spread reduction was 0%, 100% and 100%.* | Yes
-Force Absorb | Duration reduced to 5 seconds. | Same as level 1. | Same as level 2. | *Was 20 seconds.* | Yes
- \\_ | Does not absorb force points. | Same as level 1. | Same as level 2. | *Gave a portion of force points enemies use.* | Yes
-Force Heal | For every 5hp healed max force points are reduced by 1 until a minimum of 20, lasting until the end of the level. Up to 50hp can be healed without penalty. | Same as level 1, but 100hp without penalty. | Same as level 2, but 150hp without penalty. | *No penalty.* | Yes
- \\_ | Heals 10hp per second without limit. | Same as level 1. | Same as level 2. | *Healed 5hp, 5hp and 20hp per second in 25hp bursts.* | Yes
-Force Drain | Initiating drain reduces max hp every time by 5 until a minimum of 20hp. | Same as level 1. Ranged drain is disabled for the player. | Same as level 2. | *No penalty or disabling.* | Yes
- \\_ | Drain overcharge always enabled up to 100hp, regardless of max health. There is a 50% chance to lose 1hp overcharge every second. | Same as level 1, but chance is 33%. | Same as level 2, but chance is 25%. | *Only level 3 had overcharge up to 125% max hp, reduced at a rate of 1hp per second.* | Yes
-Force Grip | Duration is 1 second. | No change. | No change. | *Level 1 duration was 5 seconds.* | Yes
+Force Power | Changes | Original | Requires GM difficulty
+:---:|---|---|:---:
+Force Speed | Field of view distortion halved. | *Unnecessarily high values.* | No
+ \\_ | Activating speed turns off the saber. Attacking ends speed. | *Could attack freely.* | Yes
+Force Push | Area of effect cone halved. | *Not halved.* | Yes
+Force Pull | Pull strength increased by 33% for level 2 and reduced by 50% for level 3. | *Level 1/2 barely pulled a single target toward you while level 3 could send multiple targets to the orbit.* | No
+ \\_ | Area of effect cone halved. | *Not halved.* | Yes
+Force Sense | Weapon spread reduction is 20% per level. | *Spread reduction was 100% for levels 2 and 3.* | Yes
+Force Absorb | Duration reduced to 5 seconds. | *Was 20 seconds.* | Yes
+ \\_ | Does not absorb force points. | *Gave a portion of force points enemies used.* | Yes
+Force Heal | For every 5hp healed max force points are reduced by 1 until a minimum of 20, lasting until the end of the level. Up to 50hp per level can be healed without penalty. | *No penalty.* | Yes
+ \\_ | Heals 10hp per second without limit. | *Healed 5hp or 20hp per second, depending on level, in 25hp bursts.* | Yes
+Force Drain | Initiating drain reduces max hp every time by 5 until a minimum of 20hp. Ranged drain is disabled for the player. | *No penalty or disabling.* | Yes
+ \\_ | Drain overcharge always enabled up to 100hp, regardless of max health. There is 50%, 33% or 25% chance, depending on level, to lose 1hp overcharge every second. | *Only level 3 had overcharge up to 125% max hp, reduced at a rate of 1hp per second.* | Yes
+Force Grip | Level 1 duration is 1 second. | *Level 1 duration was 5 seconds.* | Yes
