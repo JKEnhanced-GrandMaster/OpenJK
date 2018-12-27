@@ -667,51 +667,6 @@ void Mark1_ActuallyFireRocket(void)
 	missile->bounceCount = 0;
 }
 
-void Mark1_ActuallyFireRocket(void)
-{
-	mdxaBone_t	boltMatrix;
-	vec3_t	muzzle1, enemy_org1, delta1, angleToEnemy1;
-	static	vec3_t	forward, vright, up;
-
-	int	damage = ROCKET_NPC_DAMAGE_HARD;
-
-	gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->playerModel,
-		NPC->genericBolt5,
-		&boltMatrix, NPC->currentAngles, NPC->currentOrigin, (cg.time ? cg.time : level.time),
-		NULL, NPC->s.modelScale);
-
-	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzle1);
-
-	G_PlayEffect("rocket/muzzle_flash", muzzle1);
-
-	CalcEntitySpot(NPC->enemy, SPOT_GROUND, enemy_org1);
-	VectorSubtract(enemy_org1, muzzle1, delta1);
-	vectoangles(delta1, angleToEnemy1);
-	AngleVectors(angleToEnemy1, forward, vright, up);
-
-	G_Sound(NPC, G_SoundIndex("sound/weapons/rocket/fire"));
-
-	gentity_t *missile = CreateMissile(muzzle1, forward, ROCKET_VELOCITY, 10000, NPC);
-
-	missile->classname = "rocket_proj";
-	missile->s.weapon = WP_ROCKET_LAUNCHER;
-	missile->mass = 10;
-
-	VectorSet(missile->maxs, ROCKET_SIZE, ROCKET_SIZE, ROCKET_SIZE);
-	VectorScale(missile->maxs, -1, missile->mins);
-
-	missile->damage = damage;
-	missile->dflags = DAMAGE_DEATH_KNOCKBACK;
-	missile->methodOfDeath = MOD_ROCKET;
-	missile->splashMethodOfDeath = MOD_ROCKET;
-	missile->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
-	missile->splashDamage = ROCKET_SPLASH_DAMAGE;
-	missile->splashRadius = ROCKET_SPLASH_RADIUS;
-
-	// we don't want it to bounce
-	missile->bounceCount = 0;
-}
-
 /*
 -------------------------
 Mark1_RocketAttack
